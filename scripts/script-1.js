@@ -1,8 +1,8 @@
-const API_URL =
-  "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1";
+const API_URL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1";
 const IMG_PATH = "https://image.tmdb.org/t/p/w500/";
 
-const moviesBox = document.querySelector(".movies-box"); 
+const moviesBox = document.querySelector(".movies-box");
+const searchInput = document.querySelector("input[type='text']"); 
 
 // Fetch movies from the API
 async function getMovies(url) {
@@ -36,8 +36,25 @@ function displayMovies(movies) {
       </div>
     `;
 
-    moviesBox.appendChild(movieElement); 
+    moviesBox.appendChild(movieElement);
   });
 }
 
-getMovies(API_URL); 
+// Searching movies based on the input text
+async function searchMovies(query) {
+  if (query.trim() === "") {
+    getMovies(API_URL); 
+  } else {
+    const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=04c35731a5ee918f014970082a0088b1&query=${query}`;
+    const response = await fetch(searchUrl);
+    const data = await response.json();
+    displayMovies(data.results);
+  }
+}
+
+// Event listener for the search input
+searchInput.addEventListener("input", (e) => {
+  searchMovies(e.target.value); 
+});
+
+getMovies(API_URL);
