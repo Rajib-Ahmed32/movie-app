@@ -58,3 +58,27 @@ searchInput.addEventListener("input", (e) => {
 });
 
 getMovies(API_URL);
+
+
+
+const categoryItems = document.querySelectorAll(".category-item");
+
+// Adding event listener to each category item
+categoryItems.forEach((item) => {
+  item.addEventListener("click", async () => {
+    const genre = item.dataset.genre;
+    await fetchMoviesByCategory(genre);
+  });
+});
+
+// Fetching movies by category from the API
+async function fetchMoviesByCategory(genre) {
+  try {
+    const categoryUrl = `https://api.themoviedb.org/3/discover/movie?api_key=04c35731a5ee918f014970082a0088b1&with_genres=${genre}`;
+    const response = await fetch(categoryUrl);
+    const data = await response.json();
+    displayMovies(data.results);
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+  }
+}
